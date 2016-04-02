@@ -17,26 +17,21 @@ public class CreateSceneMenus : Editor
 	{
 		// Start string
 		string completeFile = CreateSceneMenus.openingString;
-		
+
 		// get all paths
-		foreach(string path in AssetDatabase.GetAllAssetPaths())
+		string[] paths = AssetDatabase.GetAllAssetPaths();
+
+		// loop through each path
+		for(int i = 0; i < paths.Length; ++i)
 		{
-			// check it this is a unity scene
-			if(path.Contains(".unity"))
+			// check if this is a scene
+			if(paths[i].Contains(".unity"))
 			{
 				// add scene header
-				completeFile += "[MenuItem(\"Open Scene/" + path + "\")]";
-				
-				// add static function
-				string[] splitPath = path.Split('/');
-				string stringAndExtension = splitPath[splitPath.Length - 1];
-				string[] splitName = stringAndExtension.Split('.');
-				
-				// remove whitespace from string
-				string completedName = System.Text.RegularExpressions.Regex.Replace(splitName[0], " ", "");
-				
-				// create function with correct name
-				completeFile += "public static void Open" + completedName + "(){SceneMenu.OpenScene(\"" + path + "\");}";
+				completeFile += "[MenuItem(\"Open Scene/" + paths[i] + "\")]";
+
+				// create function with unique name
+				completeFile += "public static void Open" + i.ToString() + "(){SceneMenu.OpenScene(\"" + paths[i] + "\");}";
 			}
 		}
 		
