@@ -1,1 +1,0 @@
-using UnityEngine;using System.Collections;using UnityEditor;public class SceneMenu : Editor {[MenuItem("Open Scene/Assets/Scenes/Example.unity")]public static void Open25(){SceneMenu.OpenScene("Assets/Scenes/Example.unity");}public static void OpenScene(string scene){ if(EditorApplication.SaveCurrentSceneIfUserWantsTo()){EditorApplication.OpenScene(scene);}}}
