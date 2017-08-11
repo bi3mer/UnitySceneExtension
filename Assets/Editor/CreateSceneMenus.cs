@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEditor;
+using System.Collections;
+using System.IO;
 
-public class CreateSceneMenus : Editor
+[InitializeOnLoad]
+public class CreateSceneMenus : EditorWindow
 {
-	private static string filePath = "Assets/Editor/SceneMenu.cs";
+	private static string fileName = "SceneMenu.cs";
+	private static string filePath = "Assets/Editor/" + fileName;
 	private static string openingString = "using UnityEngine;using System.Collections;using UnityEditor;\n"
 		+ "public class SceneMenu : Editor {\n";
 	
@@ -12,6 +15,7 @@ public class CreateSceneMenus : Editor
 		+ "if(EditorApplication.SaveCurrentSceneIfUserWantsTo()){"
 			+ "EditorApplication.OpenScene(scene);}}}\n";
 	private static string assetFolder = "Assets/";
+	private static string gitignore = ".gitignore";
 
 	/// <summary>
 	/// This will create a string that represents a function that can be called
@@ -35,7 +39,6 @@ public class CreateSceneMenus : Editor
 	/// defined by filePath and then adding the functions to the file for unity to
 	/// parse.
 	/// </summary>
-	[MenuItem("Open Scene/Create Scenes")]
 	public static void CreateScenes()
 	{
 		// Start string
@@ -70,4 +73,57 @@ public class CreateSceneMenus : Editor
 		// Re build unity
 		AssetDatabase.Refresh();
 	}
+
+	/// <summary>
+	/// Adds default file created for menu to git ignore.
+	/// </summary>
+	public static void AddToGitIgnore(string path)
+	{
+		using (StreamWriter sw = File.AppendText(path)) 
+        {
+            sw.WriteLine("\n# Ignore scene menu\n" + fileName + "*");
+        }
+	}
+
+	/// <summary>
+	/// Checks the .gitignore and if the default file is not added to the 
+	/// .gitignore, it will be added.
+	/// </summary>
+	[MenuItem("Open Scene/test")]
+	public static void CheckAndUpdateGitIgnore()
+	{
+		// initialize variable to read file
+		string line;
+
+		// create path to gitignore
+		string path = Path.Combine(Directory.GetCurrentDirectory(), gitignore);
+
+		// open file and read line by line
+		StreamReader file = new System.IO.StreamReader(path);
+		while((line = file.ReadLine()) != null)
+		{	
+			// if the scene is in the file then we should ignore it
+			if(line == fileName)
+			{
+				return;
+			}
+		}
+
+		// close the file
+		file.Close();
+
+		// if here then the .gitignore isn't updated and the file should be added
+		CreateSceneMenus.AddToGitIgnore(path);
+	}
+
+	/// <summary>
+    /// Initializes the <see cref="CreateSceneMenus"/> class and immediatley 
+    /// sets up menu. It will overwrite on start to ensure files are not 
+    /// missed.
+    /// </summary>
+    static CreateSceneMenus()
+    {
+    	CreateSceneMenus.CheckAndUpdateGitIgnore();
+    	CreateSceneMenus.CreateScenes();
+    }
 }
