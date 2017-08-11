@@ -89,7 +89,6 @@ public class CreateSceneMenus : EditorWindow
 	/// Checks the .gitignore and if the default file is not added to the 
 	/// .gitignore, it will be added.
 	/// </summary>
-	[MenuItem("Open Scene/test")]
 	public static void CheckAndUpdateGitIgnore()
 	{
 		// initialize variable to read file
