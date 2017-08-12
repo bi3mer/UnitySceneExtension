@@ -81,7 +81,7 @@ public class CreateSceneMenus : EditorWindow
 	{
 		using (StreamWriter sw = File.AppendText(path)) 
         {
-            sw.WriteLine("\n# Ignore scene menu\n" + fileName + "*");
+            sw.WriteLine("\n# Ignore scene menu\n" + fileName + "\n" + fileName + ".meta");
         }
 	}
 
