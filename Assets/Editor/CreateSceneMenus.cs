@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using System.Collections;
 using System.IO;
 
@@ -116,13 +117,38 @@ public class CreateSceneMenus : EditorWindow
 	}
 
 	/// <summary>
+	/// Called when a scene is being saved. This is useful for when this scene
+	/// does not already exist.
+	/// </summary>
+	/// <param name="scene">Scene.</param>
+	public static void NewSceneCreated(UnityEngine.SceneManagement.Scene scene)
+	{
+		CreateSceneMenus.CreateScenes();
+	}
+
+	/// <summary>
     /// Initializes the <see cref="CreateSceneMenus"/> class and immediatley 
     /// sets up menu. It will overwrite on start to ensure files are not 
     /// missed.
     /// </summary>
     static CreateSceneMenus()
     {
+    	// Create scenes
     	CreateSceneMenus.CheckAndUpdateGitIgnore();
     	CreateSceneMenus.CreateScenes();
+
+    	// subscribe to event when new scene is created
+//		EditorSceneManager.NewSceneCreatedCallback += NewSceneCreated;
+		EditorSceneManager.sceneSaved += CreateSceneMenus.NewSceneCreated;
+    }
+
+    /// <summary>
+    /// Releases unmanaged resources and performs other cleanup operations 
+    /// before the <see cref="CreateSceneMenus"/> is reclaimed by garbage 
+    /// collection.
+    /// </summary>
+    ~CreateSceneMenus()
+    {
+		EditorSceneManager.sceneSaved -= CreateSceneMenus.NewSceneCreated;
     }
 }
