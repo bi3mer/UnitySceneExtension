@@ -98,22 +98,26 @@ public class CreateSceneMenus : EditorWindow
 		// create path to gitignore
 		string path = Path.Combine(Directory.GetCurrentDirectory(), gitignore);
 
-		// open file and read line by line
-		StreamReader file = new System.IO.StreamReader(path);
-		while((line = file.ReadLine()) != null)
-		{	
-			// if the scene is in the file then we should ignore it
-			if(line == fileName)
-			{
-				return;
+		// check if the file exists
+		if(File.Exists(path) == true)
+		{
+			// open file and read line by line
+			StreamReader file = new System.IO.StreamReader(path);
+			while((line = file.ReadLine()) != null)
+			{	
+				// if the scene is in the file then we should ignore it
+				if(line == fileName)
+				{
+					return;
+				}
 			}
+
+			// close the file
+			file.Close();
+
+			// if here then the .gitignore isn't updated and the file should be added
+			CreateSceneMenus.AddToGitIgnore(path);
 		}
-
-		// close the file
-		file.Close();
-
-		// if here then the .gitignore isn't updated and the file should be added
-		CreateSceneMenus.AddToGitIgnore(path);
 	}
 
 	/// <summary>
