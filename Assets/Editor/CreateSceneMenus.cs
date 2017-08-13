@@ -9,12 +9,12 @@ public class CreateSceneMenus : EditorWindow
 {
 	private static string fileName = "SceneMenu.cs";
 	private static string filePath = "Assets/Editor/" + fileName;
-	private static string openingString = "using UnityEngine;using System.Collections;using UnityEditor;\n"
+	private static string openingString = "using UnityEngine;using System.Collections;using UnityEditor;using UnityEditor.SceneManagement;\n"
 		+ "public class SceneMenu : Editor {\n";
 	
 	private static string endingString = "public static void OpenScene(string scene){ " 
-		+ "if(EditorApplication.SaveCurrentSceneIfUserWantsTo()){"
-			+ "EditorApplication.OpenScene(scene);}}}\n";
+		                               + "if(EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()){"
+		                               + "EditorSceneManager.OpenScene(scene);}}}\n";
 	private static string assetFolder = "Assets/";
 	private static string gitignore = ".gitignore";
 
